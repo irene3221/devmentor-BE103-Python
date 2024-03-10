@@ -1,0 +1,31 @@
+import requests
+
+class LineNotification:
+    def __init__(self, channel_access_token):
+        self.channel_access_token = channel_access_token
+
+    def send_notification(self, user_id, message):
+        url = "https://api.line.me/v2/bot/message/push"
+        headers = {
+            "Authorization": "Bearer " + self.channel_access_token,
+            "Content-Type": "application/json"
+        }
+        data = {
+            "to": user_id,
+            "messages": [
+                {
+                    "type": "text",
+                    "text": message
+                }
+            ]
+        }
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            if response.ok:
+                print("Line notification sent successfully")
+            else:
+                print("Failed to send Line notification:", response.text)
+        except Exception as e:
+            print("Failed to send Line notification:", str(e))
+
+
