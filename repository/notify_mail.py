@@ -10,8 +10,7 @@ class EmailNotification:
         msg['To'] = recipient
         msg['Subject'] = "Notification"
 
-        body = message
-        msg.attach(MIMEText(body, 'plain'))
+        msg.attach(MIMEText(message, 'plain'))
 
         # 連接SMTP服務器並發送郵件
         try:
