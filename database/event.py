@@ -11,5 +11,7 @@ class Event(Base):
     name = Column(String, unique=True)
     date = Column(String)
     content = Column(String)
+    version = Column(Integer, default=1)
+    previous_version = Column(Integer)
 
 

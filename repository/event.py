@@ -1,9 +1,6 @@
 from sqlalchemy.orm import Session
-
 from database.event import Event
-from database.subscribe import Subscribe
 from schema.database.event import EventCreate, EventUpdate
-from schema.database.subscribe import SubscribeBase
 
 
 def lists(db: Session, skip: int = 0, limit: int = 100):
@@ -30,19 +27,15 @@ def delete(db: Session, event: Event):
 def patch_event(db: Session, event_id: int, event_update: EventUpdate):
     db_event = get_event(db, event_id)
     if db_event:
+        db_event.previous_version = db_event.version
         for field, value in event_update.dict(exclude_unset=True).items():
             setattr(db_event, field, value)
+        db_event.version += 1
         db.commit()
         db.refresh(db_event)
         return db_event
     return None
 
-def subscribe(db: Session, event_id: int, subscribe: SubscribeBase):
-    db_subscribe = Subscribe(user_id=subscribe.user_id, event_id=event_id)
-    db.add(db_subscribe)
-    db.commit()
-    db.refresh(db_subscribe)
-    return db_subscribe
-
-def get_subscriptions(db: Session, user_id: int):
-    return db.query(Subscribe).filter(Subscribe.user_id == user_id).all()
+def get_previous_event_state(db: Session, event_id: int):
+    event = db.query(Event).filter(Event.id == event_id).first()
+    return event.previous_version
