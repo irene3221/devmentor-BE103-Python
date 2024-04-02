@@ -3,6 +3,7 @@ from database.event import Event
 from schema.database.event import EventCreate, EventUpdate
 
 
+
 def lists(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Event).offset(skip).limit(limit).all()
 
@@ -39,3 +40,4 @@ def patch_event(db: Session, event_id: int, event_update: EventUpdate):
 def get_previous_event_state(db: Session, event_id: int):
     event = db.query(Event).filter(Event.id == event_id).first()
     return event.previous_version
+

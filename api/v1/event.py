@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+import service.event
 import repository.event
 import repository.subscribe
 from infrastructure.mysql import get_db
@@ -22,7 +22,7 @@ def list_event(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 @router.get("/{event_id}")
 def get_event(event_id: int, db: Session = Depends(get_db)):
-    event = repository.event.get_event(db, event_id)
+    event = service.event.get_event_by_id(db, event_id)
     if event is None:
         raise HTTPException(status_code=404, detail="Event not found")
     return event
@@ -35,17 +35,19 @@ def create_event(event: EventCreate, db: Session = Depends(get_db)):
 
 @router.delete("/{event_id}")
 def delete(event_id: int, db: Session = Depends(get_db)):
-    event = repository.event.get_event(db, event_id)
-    return repository.event.delete(db=db, event=event)
+    event = service.event.get_event(db, event_id)
+    if event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return service.event.delete(db=db, event=event)
 
 
 @router.patch("/{event_id}")
 def update_event(event_id: int, event_update: EventUpdate, db: Session = Depends(get_db)):
-    existing_event = repository.event.get_event(db, event_id)
+    existing_event = service.event.get_event_by_id(db, event_id)
     if existing_event is None:
         raise HTTPException(status_code=404, detail="Event not found")
-    updated_post = repository.event.patch_event(db, event_id, event_update)
-    return updated_post
+    updated_event = service.event.patch(db, event_id, event_update)
+    return updated_event
 
 
 @router.post("/{event_id}/subscribers")
