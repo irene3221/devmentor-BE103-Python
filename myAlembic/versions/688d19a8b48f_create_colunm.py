@@ -19,9 +19,8 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.add_column('events', sa.Column('version', sa.Integer))
-    op.add_column('events', sa.Column('previous_version', sa.Integer))
-
+    op.add_column('events_langs', sa.Column('content', sa.String(length=255), nullable=False))
+    op.drop_column('events', 'content')
 
 def downgrade() -> None:
     op.drop_column('events', 'version')

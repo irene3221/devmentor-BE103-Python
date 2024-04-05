@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Column, Integer, String
 
 from infrastructure.mysql import Base
 
@@ -10,8 +10,5 @@ class Event(Base):
     user_id = Column(Integer)
     name = Column(String, unique=True)
     date = Column(String)
-    content = Column(String)
-    version = Column(Integer, default=1)
-    previous_version = Column(Integer)
 
 
