@@ -12,7 +12,6 @@ router = APIRouter(
     prefix="/events"
 )
 
-
 # 獲取全部 （get) /v1/events
 # 獲取單個 （get)  /v1/events/(/{event_id})
 @router.get("")

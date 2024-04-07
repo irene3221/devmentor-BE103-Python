@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from database.event import Event
+from database.eventlang import EventLang
 from schema.database.event import EventCreate, EventUpdate
-
 
 
 def lists(db: Session, skip: int = 0, limit: int = 100):
@@ -36,3 +36,8 @@ def patch_event(db: Session, event_id: int, event_update: EventUpdate):
     return None
 
 
+def get_content(db: Session, event_id: int, lang_id: int):
+    result = db.query(EventLang.content).filter(EventLang.event_id == event_id, EventLang.lang_id == lang_id).first()
+    if result:
+            return result[0]
+    return None
