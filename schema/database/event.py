@@ -6,7 +6,7 @@ class EventBase(BaseModel):
     user_id: int
     name: str
     date: str
-    content: str | None = None
+
 
 class EventCreate(EventBase):
     pass
@@ -17,7 +17,6 @@ class Event(EventBase):
 class EventUpdate(BaseModel):
     name: Optional[str]
     date: Optional[str]
-    content: Optional[str]
 
 
     class Config:
