@@ -9,7 +9,7 @@ def lists(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create(db: Session, event: EventCreate):
-    db_user = Event(user_id=event.user_id, name=event.name, date=event.date, content=event.content)
+    db_user = Event(user_id=event.user_id, name=event.name, date=event.date)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
