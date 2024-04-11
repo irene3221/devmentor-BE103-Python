@@ -1,14 +1,14 @@
 from sqlalchemy.orm import Session
 from database.event import Event
 from database.eventlang import EventLang
-from schema.database.event import EventCreate, EventUpdate
+from schema.database.event import EventCreate, EventUpdate, EventBase
 
 
 def lists(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Event).offset(skip).limit(limit).all()
 
 
-def create(db: Session, event: EventCreate):
+def create(db: Session, event: EventBase):
     db_user = Event(user_id=event.user_id, name=event.name, date=event.date)
     db.add(db_user)
     db.commit()

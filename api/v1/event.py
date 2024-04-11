@@ -5,7 +5,7 @@ import repository.event
 import repository.subscribe
 from api.general.auth import get_current_user
 from infrastructure.mysql import get_db
-from schema.database.event import EventCreate, EventUpdate
+from schema.database.event import EventCreate, EventUpdate, EventBase
 from schema.database.subscribe import SubscribeBase
 from database.user import User
 
@@ -31,7 +31,10 @@ def get_event(event_id: int, db: Session = Depends(get_db), current_user: User =
 
 
 @router.post("")
-def create_event(event: EventCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def create_event(payload: EventCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    event = EventBase()
+    event.name = payload.name
+    event.date = payload.date
     event.user_id = current_user.id
     return repository.event.create(db=db, event=event)
 
@@ -55,6 +58,7 @@ def update_event(event_id: int, event_update: EventUpdate, db: Session = Depends
 
 @router.post("/{event_id}/subscribers")
 def subscribe(event_id: int, subscribe: SubscribeBase, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    subscribe.user_id = current_user.id
     return repository.subscribe.subscribe(db=db, event_id=event_id, subscribe=subscribe)
 
 @router.get("/users/{user_id}/subscriptions")
