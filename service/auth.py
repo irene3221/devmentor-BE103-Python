@@ -9,7 +9,3 @@ def validate_login(db: Session, form_data_username: str, form_data_password: str
     if not form_data_password == user.password:
         return False
     return user
-
-# def fake_decode_token(token, db: Session):
-#     user = db.query(User).filter(User.username == token).first()
-#     return user
