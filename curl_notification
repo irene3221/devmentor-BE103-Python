@@ -1,0 +1,6 @@
+curl --location 'http://127.0.0.1:8000/v1/events/2/event_content' \
+--header 'Authorization: Bearer irene' \
+--header 'Content-Type: application/json' \
+--data '{
+		"content":"中文",
+		"lang_id":1	}'

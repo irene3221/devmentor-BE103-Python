@@ -4,11 +4,13 @@ import service.event
 import repository.event
 import repository.subscribe
 from api.general.auth import get_current_user
+from database.eventlang import EventLang
 from infrastructure.mysql import get_db
 from schema.database.event import EventCreate, EventUpdate, EventBase
+from schema.database.event_lang import EventLangCreate
 from schema.database.subscribe import SubscribeBase
 from database.user import User
-
+from repository import event_lang as event_lang_repo
 router = APIRouter(
     tags=["event"],
     prefix="/events"
@@ -37,6 +39,15 @@ def create_event(payload: EventCreate, db: Session = Depends(get_db), current_us
     event.date = payload.date
     event.user_id = current_user.id
     return repository.event.create(db=db, event=event)
+
+@router.post("/{event_id}/event_content")
+def create_event_content(event_id: int,payload: EventLangCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    event_lang = EventLang()
+    event_lang.event_id = event_id
+    event_lang.lang_id = payload.lang_id
+    event_lang.content = payload.content
+    event_lang_repo.create(db=db, event_lang=event_lang)
+    return event_lang
 
 
 @router.delete("/{event_id}")
